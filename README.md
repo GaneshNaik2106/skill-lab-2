@@ -1,75 +1,124 @@
-# Black & White Image Colorization
+# PROJECT-2 – Image Colorization on Raspberry Pi
 
-A Python application that automatically colorizes black and white images using a pre-trained deep learning model based on Caffe framework.
+This project downloads required models and then runs a Python script to colorize images using pre‑trained deep‑learning models on a Raspberry Pi.
 
-## Features
+---
 
-- Converts grayscale/black & white images to color automatically
-- Uses advanced deep learning (Zhang et al. 2016 colorization model)
-- Fast processing with OpenCV's DNN module
-- Supports common image formats (JPEG, PNG, etc.)
+## 1. Prerequisites
 
-## Requirements
+- Raspberry Pi (Raspberry Pi OS or any Linux‑based OS)  
+- Internet connection  
+- Python 3 and `pip` installed  
+- Web browser (to access GitHub)
 
-- Python 3.6+
-- OpenCV (`opencv-python==4.13.0.92`)
-- NumPy (`numpy==2.0.2`)
+---
 
-## Installation
+## 2. Setup Steps
 
-1. **Download the project:**
-   - Go to [GitHub Repository](https://github.com/GaneshNaik2106/skill-lab-2)
-   - Click the green **Code** button
-   - Select **Download ZIP**
-   - Extract the ZIP file to your desired location
+### 1. Turn on Raspberry Pi and connect to internet  
+- Power on the Raspberry Pi.  
+- Connect it to Wi‑Fi or Ethernet so it has internet access.
 
-2. **Create a virtual environment (optional but recommended):**
+### 2. Open the project repository  
+- In a web browser, open:  
+  ```text
+  https://github.com/GaneshNaik2106/skill-lab-2
+  ```
+
+### 3. Download the ZIP  
+- On the GitHub page, click the **Code** button.  
+- Choose **Download ZIP** and save it to your Raspberry Pi.
+
+### 4. Extract the ZIP file  
+- Locate the downloaded ZIP (e.g., `skill-lab-2-main.zip`).  
+- Extract it (e.g., **Extract Here** or via terminal: `unzip skill-lab-2-main.zip`).
+
+### 5. Open the extracted folder  
+- Navigate into the extracted folder (e.g., `skill-lab-2-main`).
+
+### 6. Open a terminal in the project folder  
+- Right‑click inside the folder and choose **Open Terminal Here** (or equivalent).  
+- The terminal should be in the `skill-lab-2` project directory.
+
+---
+
+## 3. Python Virtual Environment & Dependencies
+
+Run the following commands in the terminal:
+
+### 7. Create a virtual environment  
 ```bash
-python -m venv venv
-# On Windows:
-venv\Scripts\activate
-# On macOS/Linux:
-source venv/bin/activate
+python -m venv skill
 ```
 
-3. **Install dependencies:**
+This creates an isolated environment named `skill`.
+
+### 8. Activate the virtual environment  
+```bash
+source ./skill/bin/activate
+```
+
+Your prompt should show `(skill)` at the beginning.
+
+### 9. Install dependencies  
 ```bash
 pip install -r requirements.txt
 ```
 
-## Pre-trained Models
+This installs all required packages listed in `requirements.txt`.
 
-The following pre-trained Caffe models are included in the downloaded project:
+---
 
-- `colorization_deploy_v2.prototxt` - Model architecture
-- `colorization_release_v2.caffemodel` - Pre-trained weights
-- `pts_in_hull.npy` - Color cluster centers
+## 4. Download and Configure Models
 
-## Usage
+### 10. Run the download script  
+```bash
+python download.py
+```
 
-1. Place your black & white image in the project folder and name it `blacknwhite.jpeg` 
-   (or update the `IMAGE_PATH` variable in the script)
+This script downloads the model files (e.g., `.caffemodel`, `.prototxt`, `pts_in_hull.npy`, etc.) to a local folder such as `models/`.
 
-2. Run the colorization script:
+### 11. Update model paths in colorize.py  
+- Open `colorize.py` in a text editor:  
+  ```bash
+  nano colorize.py
+  ```
+- Look for variables that define model paths, for example:
+  ```python
+  proto_file = "path/to/colorization_deploy_v2.prototxt"
+  model_file = "path/to/colorization_release_v2.caffemodel"
+  hull_pts   = "path/to/pts_in_hull.npy"
+  ```
+- Update them to match the actual location of your downloaded models, such as:
+  ```python
+  proto_file = "models/colorization_deploy_v2.prototxt"
+  model_file = "models/colorization_release_v2.caffemodel"
+  hull_pts   = "models/pts_in_hull.npy"
+  ```
+
+Save and close the file.
+
+### 12. Run the colorization script  
 ```bash
 python colorize.py
 ```
 
-3. The colorized image will be saved as `colorized_output.jpg` 
-   (or the path specified in `OUTPUT_PATH`)
+The script will load the models, process the input image (either hardcoded or passed as an argument), and save or display the colorized output image.
 
-### Customization
+---
 
-Edit `colorize.py` to change:
-- `IMAGE_PATH`: Input image file path
-- `OUTPUT_PATH`: Output image file path
-- Model paths if you organize files differently
+## 5. Notes
 
-## How It Works
+- Ensure the `download.py` script successfully downloads all model files before running `colorize.py`.  
+- If you restart the Pi, reactivate the environment with:  
+  ```bash
+  source ./skill/bin/activate
+  ```  
+  then run `python colorize.py` again.  
+- If you want to colorize a different image, update the input image path in `colorize.py` similarly to the model paths.
 
-1. **Model Loading**: Loads the pre-trained Caffe colorization model
-2. **Preprocessing**: Converts image to LAB color space and resizes to 224x224
-3. **Prediction**: Uses neural network to predict color information (ab channels)
-4. **Postprocessing**: Resizes predictions back to original dimensions and converts to BGR
-5. **Output**: Saves the colorized image
+---
 
+## 6. License
+
+Unless specified otherwise in the repository, treat this as an educational project and follow any license terms provided in the original `skill-lab-2` GitHub repository.
